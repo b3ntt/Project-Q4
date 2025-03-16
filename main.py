@@ -36,7 +36,6 @@ class StartScreen(MDScreen):
                 )
             )
 
-
 class NewPlayerScreen(MDScreen):
 
     def save_player(self, name, year):
@@ -52,26 +51,30 @@ class NewMatchScreen(MDScreen):
         playerid = playerid[0]
         database.execute_query("INSERT INTO Match (SpielerID, Gegnername, Matchtag) Values (? , ?, ?)",(playerid[0], opponent , date,))
         MDApp.get_running_app().rootmanager.current = "analysisscreen"
+        MDApp.get_running_app().rootmanager.ids.analysis_screen.on_start()
         MDApp.get_running_app().rootmanager.ids.analysis_screen.ids.player_name.text = player
         MDApp.get_running_app().rootmanager.ids.analysis_screen.ids.opponent_name.text = opponent
 
 class AnalysisScreen(MDScreen):
     player_points = NumericProperty(0)
-    opponent_points = 0
-    touch_counter = 0
+    opponent_points = NumericProperty(0)
+    touch_counter = NumericProperty(0)
     positionlist = ["bh_fc", "m_fc", "fh_fc", "bh_mc", "m_mc", "fh_mc", "bh_bc", "m_bc", "fh_bc"]
     placementlist = ["bh_fc_opp", "m_fc_opp", "fh_fc_opp", "bh_mc_opp", "m_mc_opp", "fh_mc_opp", "bh_bc_opp", "m_bc_opp", "fh_bc_opp"]
     errorlist = ["b_out_opp", "b_out", "l_out", "r_out", "net"]
     set_exist = 0
-    curr_match = database.execute_select_query("SELECT max(MatchID) FROM Match", ())[0]
-    curr_player = database.execute_select_query("SELECT SpielerID FROM Match WHERE MatchID = ?", (curr_match[0],))[0]
-    curr_set = database.execute_select_query("SELECT max(SatzID) FROM Satz", ())[0]
+
+
+    def on_start(self):
+        self.curr_match = database.execute_select_query("SELECT max(MatchID) FROM Match", ())[0]
+        self.curr_player = database.execute_select_query("SELECT SpielerID FROM Match WHERE MatchID = ?", (self.curr_match[0],))[0]
 
     def new_set(self):
         self.player_points = 0
         self.opponent_points = 0
         database.execute_query("INSERT INTO Satz (SpielerID, MatchID) VALUES (?, ?)",
                                (self.curr_player[0], self.curr_match[0]))
+        self.curr_set = database.execute_select_query("SELECT max(SatzID) FROM Satz", ())[0]
         if self.set_exist < 3:
             self.ids.player_score.add_widget(MDLabel(text=str(self.player_points)))
             self.ids.opp_score.add_widget(MDLabel(text=str(self.opponent_points)))
