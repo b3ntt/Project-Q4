@@ -1,0 +1,291 @@
+<RootManager>:
+    id: root_manager
+    StartScreen:
+        id: start_screen
+
+    NewPlayerScreen:
+        id: new_player_screen
+
+    NewMatchScreen:
+        id: new_match_screen
+
+    AnalysisScreen:
+        id: analysis_screen
+
+<StartScreen>:
+    name: "startscreen"
+    FloatLayout:
+
+        MDBoxLayout:
+            orientation: "vertical"
+
+            MDTopAppBar:
+                theme_bg_color: "custom"
+                md_bg_color: 0,0,0,0
+                padding: (dp(10),0,dp(10),dp(10))
+                MDTextField:
+                    mode: "round"
+                    icon_left: 'magnify'
+                    hint_text: "search player"
+                    on_text: root.search_players(self.text)
+
+            MDBoxLayout:
+                padding: dp(10)
+                MDScrollView:
+                    effect_cls: 'ScrollEffect'
+
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        size_hint_y: None
+                        adaptive_height: True
+
+                        MDRectangleFlatIconButton:
+                            text: "Add New Player"
+                            font_style: 'Button'
+                            icon: "account-plus"
+                            line_color: 0, 0, 0, 0
+                            on_release: app.rootmanager.switch_to(app.rootmanager.ids.new_player_screen)
+
+                        MDList:
+                            id: playerlist
+
+        MDFloatingActionButton:
+            icon: "table-plus"
+            center: root.width - dp(50), dp(50)
+            on_press: app.rootmanager.current = "newmatchscreen"
+
+
+<NewPlayerScreen>:
+    name: "newplayerscreen"
+    MDFloatLayout:
+        MDBoxLayout:
+            orientation: "vertical"
+            MDTopAppBar:
+                pos_hint_y: {"top": 1}
+                title: "Add Player"
+                left_action_items: [["arrow-left", lambda x: app.rootmanager.switch_to(app.rootmanager.ids.start_screen)]]
+
+            MDBoxLayout:
+                pos_hint_y: {"top": 1}
+                orientation: "vertical"
+                spacing: dp(10)
+                padding: (dp(20), 0, dp(20), dp(200))
+
+                MDTextField:
+                    id: name
+                    mode: "rectangle"
+                    hint_text: "Full Name"
+
+                MDTextField:
+                    id: year
+                    mode: "rectangle"
+                    hint_text: "Birthyear"
+
+        MDFillRoundFlatButton:
+            center: root.width - dp(50), dp(50)
+            text: "Save"
+            font_style: 'Button'
+            on_press: root.save_player(root.ids.name.text, root.ids.year.text)
+
+<NewMatchScreen>:
+    name: "newmatchscreen"
+    MDFloatLayout:
+        MDBoxLayout:
+            orientation: "vertical"
+            MDTopAppBar:
+                pos_hint_y: {"top": 1}
+                title: "New Match-entry"
+                left_action_items: [["arrow-left", lambda x: app.rootmanager.switch_to(app.rootmanager.ids.start_screen)]]
+
+            MDBoxLayout:
+                pos_hint_y: {"top": 1}
+                orientation: "vertical"
+                spacing: dp(10)
+                padding: (dp(20), 0, dp(20), dp(200))
+
+                MDTextField:
+                    id: player
+                    mode: "rectangle"
+                    hint_text: "Player"
+
+                MDTextField:
+                    id: opp
+                    mode: "rectangle"
+                    hint_text: "Opponent"
+
+                MDTextField:
+                    id: date
+                    mode: "rectangle"
+                    hint_text: "Date"
+
+        MDFillRoundFlatButton:
+            center: root.width - dp(70), dp(50)
+            text: "Start Analysis"
+            font_style: 'Button'
+            on_press: root.start_analysis(root.ids.player.text, root.ids.opp.text, root.ids.date.text)
+
+<AnalysisScreen>:
+    name: "analysisscreen"
+    MDBoxLayout:
+        orientation: "vertical"
+        spacing: dp(5)
+
+        MDBoxLayout:
+            size_hint: 1, 0.25
+            padding: dp(3), 0, dp(3), 0
+            spacing: dp(2)
+
+            MDBoxLayout:
+                #md_bg_color:app.theme_cls.primary_color
+                orientation: "vertical"
+
+                MDBoxLayout:
+                    id: player_score
+                    MDLabel:
+                        id: player_name
+
+                MDBoxLayout:
+                    id: opp_score
+                    MDLabel:
+                        id: opponent_name
+
+
+            MDRectangleFlatIconButton:
+                size_hint_y: 1
+                icon: "plus"
+                text: "new set"
+                on_release: root.new_set()
+
+        Court:
+
+<Court>:
+    id: court
+    md_bg_color:app.theme_cls.primary_color
+    orientation: "vertical"
+
+    AreaButton:
+        name:"b_out_opp"
+        size_hint_y: 0.125
+
+    MDBoxLayout:
+
+        AreaButton:
+            name: "l_out"
+            size_hint_x: None
+            width: court.width/5
+
+        MDBoxLayout:
+            orientation: "vertical"
+
+            MDGridLayout:
+                cols: 3
+
+                AreaButton:
+                    name: "fh_bc_opp"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+                AreaButton:
+                    name: "m_bc_opp"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+                AreaButton:
+                    name: "bh_bc_opp"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+                AreaButton:
+                    name: "fh_mc_opp"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+                AreaButton:
+                    name: "m_mc_opp"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+                AreaButton:
+                    name: "bh_mc_opp"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+                AreaButton:
+                    name: "fh_fc_opp"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+                AreaButton:
+                    name: "m_fc_opp"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+                AreaButton:
+                    name: "bh_fc_opp"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+            AreaButton:
+                name: "net"
+                size_hint: 1 , 0.1428
+
+            MDGridLayout:
+                cols: 3
+
+                AreaButton:
+                    name: "bh_fc"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+                AreaButton:
+                    name: "m_fc"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+                AreaButton:
+                    name: "fh_fc"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+                AreaButton:
+                    name: "bh_mc"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+                AreaButton:
+                    name: "m_mc"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+                AreaButton:
+                    name: "fh_mc"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+                AreaButton:
+                    name: "bh_bc"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+                AreaButton:
+                    name: "m_bc"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+                AreaButton:
+                    name: "fh_bc"
+                    size_hint: None, 0.1428
+                    width: court.width/5
+
+        AreaButton:
+            name: "r_out"
+            size_hint_x: None
+            width: court.width/5
+    AreaButton:
+        name:"b_out"
+        size_hint_y: 0.125
+
+<AreaButton>:
+    on_release: app.rootmanager.ids.analysis_screen.button_pressed(self.name)
+
+
